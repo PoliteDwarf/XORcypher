@@ -4,51 +4,41 @@ import java.util.Arrays;
 public class Encrypter {
     private char[] key;
     private String InputFileName, OutputFileName;
-
-    Encrypter() {
-        key = "".toCharArray();
-        OutputFileName = Arrays.toString(key) + ".txt";
+    enum Flag {
+        KEY, OUTPUT, NONE
     }
 
-    Encrypter(String input) {
-        int flag = 0;
-        String[] parsed = input.split(" ");
-        for (String s : parsed) {
-            if (flag == 1) {
+    Encrypter(String[] input) {
+        Flag flag = Flag.NONE;
+        for (String s : input) {
+            if (flag == Flag.KEY) {
                 key = s.toCharArray();
-                OutputFileName = s + ".txt";
-                flag = 0;
-                continue;
-            }
-            else if (flag == 2) {
                 OutputFileName = s;
-                flag = 0;
-                continue;
+                flag = Flag.NONE;
             }
-            else if (s.contains(".txt")) {
+            else if (flag == Flag.OUTPUT) {
+                OutputFileName = s;
+                flag = Flag.NONE;
+            }
+            else if ((s.equals("-c")) || (s.equals("-d"))) flag = Flag.KEY;
+            else if (s.equals("-o")) flag = Flag.OUTPUT;
+            else {
                 InputFileName = s;
-                flag = 0;
-                continue;
             }
-            if ((s.equals("-c")) || (s.equals("-d"))) flag = 1;
-            if (s.equals("-o")) flag = 2;
         }
-        Encrypt();
     }
 
-    private void Encrypt(){
+    void encrypt(){
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(InputFileName));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(OutputFileName));
-            String line = reader.readLine();
-            while (line != null){
-                char[] rez = line.toCharArray();
-                for (int i = 0; i < line.length(); i++){
-                    rez[i] = (char) (line.charAt(i) ^ key[i % key.length]);
-                }
-                writer.write(rez);
-                writer.newLine();
-                line = reader.readLine();
+            FileInputStream reader = new FileInputStream("src/test/java/" + InputFileName);
+            FileOutputStream writer = new FileOutputStream("src/test/java/" + OutputFileName);
+            int i = 0;
+            int symb = reader.read();
+            while (symb != -1){
+                symb = (char) (symb ^ key[i % key.length]);
+                i++;
+                writer.write(symb);
+                symb = reader.read();
             }
             reader.close();
             writer.close();
@@ -57,5 +47,17 @@ public class Encrypter {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    void setKey(String string) {
+        key = string.toCharArray();
+    }
+
+    void setInput(String string) {
+        InputFileName = string;
+    }
+
+    void setOutput(String string) {
+        OutputFileName = string;
     }
 }
