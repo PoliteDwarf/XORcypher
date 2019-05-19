@@ -1,5 +1,7 @@
-import java.io.*;
-import java.util.Arrays;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Encrypter {
     private char[] key;
@@ -30,8 +32,8 @@ public class Encrypter {
 
     void encrypt(){
         try {
-            FileInputStream reader = new FileInputStream("src/test/java/" + InputFileName);
-            FileOutputStream writer = new FileOutputStream("src/test/java/" + OutputFileName);
+            FileInputStream reader = new FileInputStream(InputFileName);
+            FileOutputStream writer = new FileOutputStream(OutputFileName);
             int i = 0;
             int symb = reader.read();
             while (symb != -1){
