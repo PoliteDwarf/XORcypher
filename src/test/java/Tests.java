@@ -1,9 +1,10 @@
 import org.junit.Test;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class Tests {
 
@@ -18,10 +19,8 @@ public class Tests {
                 symbOne = one.read();
                 symbTwo = two.read();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            fail();
         }
     }
 
